@@ -1,4 +1,4 @@
-<?php include('./templates/header.php') ?>
+<?php include('./partials/header.php') ?>
 
 <main>
     <div class="container">
