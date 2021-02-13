@@ -2,9 +2,10 @@
 session_start();
 include('../config/db_connect.php');
 
-function setAuthenticated()
+function setAuthenticated($user_id)
 {
-    $_SESSION["isAuthenticated"] = "true";
+    $_SESSION["isAuthenticated"] = TRUE;
+    $_SESSION["user_id"] = $user_id;
 }
 
 function createUser($username, $password)
@@ -12,9 +13,14 @@ function createUser($username, $password)
     global $conn;
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $sql = "insert into users (username, password) values ('{$username}', '{$hashed_password}')";
+    $result = $conn->query($sql);
+    if ($result === TRUE) {
+        // $user = $result->fetch_assoc();
+        $sql2 = "select id from users where username='{$username}'";
+        $result = $conn->query($sql2);
+        $user_id_array = $result->fetch_assoc();
 
-    if ($conn->query($sql) === TRUE) {
-        setAuthenticated();
+        setAuthenticated($user_id_array['id']);
         header("Location: /dashboard.php");
         exit();
     } else {
@@ -23,7 +29,16 @@ function createUser($username, $password)
 
     $conn->close();
 }
-createUser($_POST['username'], $_POST['password']);
+
+if ($_SESSION["isAuthenticated"] === TRUE) {
+    header("Location: /dashboard.php");
+    exit();
+}
+
+
+if (isset($_POST['username'])) {
+    createUser($_POST['username'], $_POST['password']);
+}
 ?>
 
 <?php include('../partials/header.php') ?>

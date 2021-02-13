@@ -2,15 +2,16 @@
 session_start();
 include('../config/db_connect.php');
 
-function setAuthenticated()
+function setAuthenticated($user_id)
 {
     $_SESSION["isAuthenticated"] = TRUE;
+    $_SESSION["user_id"] = $user_id;
 }
 
 function compareHashes($username, $password)
 {
     global $conn;
-    $sql = "SELECT password FROM users WHERE username = '{$username}'";
+    $sql = "SELECT `password`, `id` FROM users WHERE username = '{$username}'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -18,7 +19,7 @@ function compareHashes($username, $password)
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         if (password_verify($password, $hash)) {
-            setAuthenticated();
+            setAuthenticated($user['id']);
             header("Location: /dashboard.php");
             exit();
         } else {
@@ -28,8 +29,13 @@ function compareHashes($username, $password)
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
-compareHashes($_POST['username'], $_POST['password']);
-
+if ($_SESSION["isAuthenticated"] === TRUE) {
+    header("Location: /dashboard.php");
+    exit();
+}
+if (isset($_POST['username'])) {
+    compareHashes($_POST['username'], $_POST['password']);
+}
 ?>
 
 <?php include('../partials/header.php') ?>

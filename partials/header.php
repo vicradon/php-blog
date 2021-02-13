@@ -18,15 +18,15 @@
                 <?php session_start(); ?>
                 <?php if ($_SESSION["isAuthenticated"] === TRUE) { ?>
                     <div class="d-flex">
-                        <a class="btn btn-primary text-white mr-3" href="post/create.php">Create Post</a>
+                        <a class="btn btn-primary text-white mr-3" href="posts/create.php">Create Post</a>
                         <form action="/auth/logout.php">
                             <button class="btn btn-secondary">Logout</button>
                         </form>
                     </div>
                 <?php } else { ?>
                     <div>
-                        <a class="btn btn-secondary text-white" href="auth/login.php">Login</a>
-                        <a class="btn btn-primary text-white" href="auth/signup.php">Signup</a>
+                        <a class="btn btn-secondary text-white" href="/auth/login.php">Login</a>
+                        <a class="btn btn-primary text-white" href="/auth/signup.php">Signup</a>
                     </div>
                 <?php } ?>
             </div>
