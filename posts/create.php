@@ -9,7 +9,12 @@ function createPost($title, $content)
     $user_id = $_SESSION["user_id"];
     $sql = "insert into posts (title, content, user_id) values ('{$title}', '{$content}', '{$user_id}')";
 
-    if ($conn->query($sql) === TRUE) {
+    $sql_stmt = $conn->prepare("INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)");
+    $sql_stmt->bind_param("sss", $title, $content, $user_id);
+
+    $execution = $sql_stmt->execute();
+
+    if ($execution === TRUE) {
         $_SESSION['success_flash'] = "Post created successfully";
         header("Location: /dashboard.php");
         exit();
@@ -20,8 +25,12 @@ function createPost($title, $content)
 
     $conn->close();
 }
+if ($_SESSION["isAuthenticated"] !== TRUE) {
+    header("Location: /");
+    exit();
+}
 if (isset($_POST['title'])) {
-    createPost($_POST['title'], $_POST['content']);
+    createPost(htmlspecialchars($_POST['title']), htmlspecialchars($_POST['content']));
 }
 ?>
 

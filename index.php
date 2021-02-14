@@ -3,7 +3,6 @@
 <main>
     <div class="container">
         <?php include('./main.php') ?>
-
     </div>
 </main>
 

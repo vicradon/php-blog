@@ -1,5 +1,5 @@
 <div class="mt-4">
-    <?php if ($_SESSION['success_flash']) { ?>
+    <?php if (isset($_SESSION['success_flash'])) { ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?php echo $_SESSION['success_flash'] ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -8,7 +8,7 @@
         </div>
     <?php } ?>
 
-    <?php if ($_SESSION['error_flash']) { ?>
+    <?php if (isset($_SESSION['error_flash'])) { ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?php echo $_SESSION['error_flash'] ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
