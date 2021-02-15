@@ -9,7 +9,8 @@ $sql_count = "SELECT COUNT(*) as count FROM posts";
 
 $result = $conn->query($sql);
 $posts_count_result = $conn->query($sql_count);
-$posts_count = $posts_count_result->fetch_assoc();
+$posts_count_array = $posts_count_result->fetch_assoc();
+$posts_count = $posts_count_array['count'];
 
 if ($result !== TRUE) {
     $_SESSION['error_flash'] = "An error occured while fetching the posts";
@@ -56,7 +57,7 @@ $posts = $result->fetch_all();
         <ul class="pagination">
             <li class="page-item <?php echo $page <= 1 ? 'disabled' : 'enabled' ?>">
                 <?php if ($page > 1) { ?>
-                    <a href="?page=<?php echo $page ?>"><span class="page-link">Previous</span></a>
+                    <a href="?page=<?php echo $page - 1 ?>"><span class="page-link">Previous</span></a>
                 <?php } else { ?>
                     <span class="page-link">Previous</span>
                 <?php }  ?>
@@ -72,9 +73,25 @@ $posts = $result->fetch_all();
                     <span class="sr-only">(current)</span>
                 </span>
             </li>
-            <li class="page-item"><a class="page-link" href="#"><?php echo $page + 1 ?></a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
+
+            <?php if ($page * 10 < $posts_count) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
+            <?php } ?>
+
+            <?php if ($page * 20 < $posts_count) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li>
+            <?php } ?>
+
+            <?php if ($page * 30 < $posts_count) { ?>
+                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 3 ?>"><?php echo $page + 3 ?></a></li>
+            <?php } ?>
+
+            <li class="page-item <?php echo $page * 10 < $posts_count ? 'enabled' : 'disabled' ?>">
+                <?php if ($page * 10 < $posts_count) { ?>
+                    <a class="page-link" href="?page=<?php echo $page + 1 ?>">Next</a>
+                <?php } else { ?>
+                    <span class="page-link">Next</span>
+                <?php }  ?>
             </li>
         </ul>
     </div>
